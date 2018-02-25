@@ -155,34 +155,34 @@ class DatasService {
 
         $this->mailer->send($message);
 
-//        $datas = $this->datasRepository->getDatas(array(1,10));
-//        $formatedDatas = array();
-//        foreach($datas as $data) {
-//            $formatedDatas[$data['name']][$data['position']] = $data['value'];
-//        }
-//
-//        $retour = array();
-//        $i = 0;
-//        foreach($formatedDatas as $key => $data) {
-//            $pourcentage = number_format(((($data[1] - $data[10]) / $data[10]) * 100) , 3);
-//            if($pourcentage > 10 || $pourcentage < -10) {
-//                $retour[$i]['pair'] = $key;
-//                $retour[$i]['pourc'] = $pourcentage;
-//            }
-//        }
-//
-//        if(count($retour) > 0) {
-//            $message = "";
-//            foreach($retour as $data) {
-//                $message .= sprintf("La monnaie %s a fait %s %. ", $data['pair'], $data['pourc']);
-//            }
-//
-//            $message = (new \Swift_Message('Hello Email'))
-//                ->setFrom('poloniew@q2b.fr')
-//                ->setTo('qdebay@gmail.com')
-//                ->setBody($message);
-//
-//            $this->mailer->send($message);
-//        }
+        $datas = $this->datasRepository->getDatas(array(1,10));
+        $formatedDatas = array();
+        foreach($datas as $data) {
+            $formatedDatas[$data['name']][$data['position']] = $data['value'];
+        }
+
+        $retour = array();
+        $i = 0;
+        foreach($formatedDatas as $key => $data) {
+            $pourcentage = number_format(((($data[1] - $data[10]) / $data[10]) * 100) , 3);
+            if($pourcentage > 10 || $pourcentage < -10) {
+                $retour[$i]['pair'] = $key;
+                $retour[$i]['pourc'] = $pourcentage;
+            }
+        }
+
+        if(count($retour) > 0) {
+            $message = "";
+            foreach($retour as $data) {
+                $message .= sprintf("La monnaie %s a fait %s %. <br/>", $data['pair'], $data['pourc']);
+            }
+
+            $message = (new \Swift_Message('Poloniex'))
+                ->setFrom('qdebay.smtp@gmail.com')
+                ->setTo('qdebay@gmail.com')
+                ->setBody($message);
+
+            $this->mailer->send($message);
+        }
     }
 }

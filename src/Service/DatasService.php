@@ -158,7 +158,7 @@ class DatasService {
         $i = 0;
         foreach($formatedDatas as $key => $data) {
             $pourcentage = number_format(((($data[1] - $data[10]) / $data[10]) * 100) , 3);
-            if($pourcentage > 10 || $pourcentage < -10) {
+            if($pourcentage > 3 || $pourcentage < -3) {
                 $retour[$i]['pair'] = $key;
                 $retour[$i]['pourc'] = $pourcentage;
             }

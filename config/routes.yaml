@@ -1,0 +1,3 @@
+#init:
+#    path: /init
+#    controller: App\Controller\FrontController::init

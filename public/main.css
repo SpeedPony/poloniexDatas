@@ -1,0 +1,11 @@
+#datatable {
+    font-size: 20px;
+}
+
+#datatable .green {
+    color : green;
+}
+
+#datatable .red {
+    color : red;
+}

@@ -148,13 +148,6 @@ class DatasService {
      */
     public function sendMail() {
 
-        $message = (new \Swift_Message('Hello Email'))
-            ->setFrom('qdebay.smtp@gmail.com')
-            ->setTo('qdebay@gmail.com')
-            ->setBody('test');
-
-        $this->mailer->send($message);
-
         $datas = $this->datasRepository->getDatas(array(1,10));
         $formatedDatas = array();
         foreach($datas as $data) {

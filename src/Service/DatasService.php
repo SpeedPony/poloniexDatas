@@ -183,9 +183,13 @@ class DatasService {
         if(count($retour) > 0) {
             $message = "";
             foreach($retour as $data) {
+                /** @var Pair $pairEntity */
                 $pairEntity = $this->pairRepository->findOneBy(array('name' => $data['pair']));
                 if(! $pairEntity->isMailSent()) {
                     $message .= sprintf("La monnaie %s a fait %s %%.", $data['pair'], $data['pourc']);
+                    $pairEntity->setMailSent(true);
+                    $pairEntity->setDateMail(new \DateTime());
+                    $this->pairRepository->create($pairEntity);
                 }
             }
 

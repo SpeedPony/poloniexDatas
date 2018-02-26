@@ -54,11 +54,10 @@ class DatasRepository extends ServiceEntityRepository
      * @return array
      */
     public function getDatas($position) {
-        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb = $this->createQueryBuilder('d');
         $query = $qb->select('d.value as value')
             ->addSelect('d.position as position')
             ->addSelect('p.name as name')
-            ->from('App\Entity\Datas', 'd')
             ->leftJoin('d.pair', 'p')
             ->andWhere($qb->expr()->in('d.position', ':position'))
             ->setParameter('position', $position);

@@ -73,6 +73,7 @@ class DatasService {
         }
         $this->datasRepository->updatePosition();
         $this->deleteOldDatas();
+        $this->resetMailSent();
         $this->sendMail();
     }
 
@@ -81,6 +82,20 @@ class DatasService {
      */
     public function deleteOldDatas() {
         $this->datasRepository->deleteOldDatas();
+    }
+
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
+     */
+    public function resetMailSent() {
+        $pairs = $this->pairRepository->getPairEmailSentOverdue();
+        foreach ($pairs as $pair) {
+            $pair->setMailSent(false);
+            $pair->setDateMail(null);
+            $this->pairRepository->create($pair);
+        }
     }
 
     /**
@@ -168,15 +183,19 @@ class DatasService {
         if(count($retour) > 0) {
             $message = "";
             foreach($retour as $data) {
-                $message .= sprintf("La monnaie %s a fait %s %%. <br/>", $data['pair'], $data['pourc']);
+                $pairEntity = $this->pairRepository->findOneBy(array('name' => $data['pair']));
+                if(! $pairEntity->isMailSent()) {
+                    $message .= sprintf("La monnaie %s a fait %s %%.", $data['pair'], $data['pourc']);
+                }
             }
 
-            $message = (new \Swift_Message('Poloniex'))
-                ->setFrom('qdebay.smtp@gmail.com')
-                ->setTo('qdebay@gmail.com')
-                ->setBody($message);
-
-            $this->mailer->send($message);
+            if(strlen($message) > 0) {
+                $message = (new \Swift_Message('Poloniex'))
+                    ->setFrom('qdebay.smtp@gmail.com')
+                    ->setTo('qdebay@gmail.com')
+                    ->setBody($message);
+                $this->mailer->send($message);
+            }
         }
     }
 }

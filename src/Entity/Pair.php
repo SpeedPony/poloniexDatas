@@ -31,6 +31,18 @@ class Pair
     private $name;
 
     /**
+     * @ORM\Column(type="boolean")
+     * @var boolean
+     */
+    private $mailSent;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @var \DateTime
+     */
+    private $dateMail;
+
+    /**
      * @return int
      */
     public function getId(): int {
@@ -56,5 +68,33 @@ class Pair
      */
     public function setName(string $name): void {
         $this->name = $name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMailSent() {
+        return $this->mailSent;
+    }
+
+    /**
+     * @param bool $mailSent
+     */
+    public function setMailSent(bool $mailSent): void {
+        $this->mailSent = $mailSent;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateMail() {
+        return $this->dateMail;
+    }
+
+    /**
+     * @param \DateTime $dateMail
+     */
+    public function setDateMail($dateMail): void {
+        $this->dateMail = $dateMail;
     }
 }

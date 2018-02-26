@@ -31,7 +31,7 @@ class Datas
     private $value;
 
     /**
-     * @ORM\Column(type="datetime", length=10)
+     * @ORM\Column(type="datetime")
      * @var \DateTime
      */
     private $date;

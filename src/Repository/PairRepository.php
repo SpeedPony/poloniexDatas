@@ -36,4 +36,22 @@ class PairRepository extends ServiceEntityRepository
         $this->getEntityManager()->persist($pair);
         $this->getEntityManager()->flush();
     }
+
+    /**
+     * @return Pair[]
+     * @throws \Exception
+     */
+    public function getPairEmailSentOverdue() {
+
+        $date = new \DateTime();
+        $date->sub(new \DateInterval('PT5i'));
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $query = $qb->from('App\Entity\Pair', 'p')
+            ->andWhere($qb->expr()->eq('p.mailSent', true))
+            ->andWhere($qb->expr()->lte('p.dateMail', ':datetime'))
+            ->setParameter('datetime', $date);
+
+        return $query->getQuery()->getResult();
+    }
 }

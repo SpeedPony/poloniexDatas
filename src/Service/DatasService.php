@@ -56,7 +56,7 @@ class DatasService {
     public function saveDatas($json) {
         $datas = $this->decodeJson($json);
         foreach ($datas as $pair => $value) {
-            if (strpos($pair, 'BTC') !== false && strpos($pair, 'USDT') == false) {
+            if (strpos($pair, 'BTC') !== false && strpos($pair, 'USDT') === false) {
                 $pairEntity = $this->pairRepository->findOneBy(array('name' => $pair));
                 if (is_null($pairEntity)) {
                     $pairEntity = new Pair();

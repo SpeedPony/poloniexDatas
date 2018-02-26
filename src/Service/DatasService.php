@@ -176,6 +176,7 @@ class DatasService {
             if($pourcentage > 1 || $pourcentage < -1) {
                 $retour[$i]['pair'] = $key;
                 $retour[$i]['pourc'] = $pourcentage;
+                $i++;
             }
         }
 

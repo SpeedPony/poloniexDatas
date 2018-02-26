@@ -163,10 +163,13 @@ class DatasService {
                 $retour[$i]['pourc'] = $pourcentage;
             }
         }
+\Monolog\Handler\error_log('test');
 
         if(count($retour) > 0) {
+            \Monolog\Handler\error_log(count($retour));
             $message = "";
             foreach($retour as $data) {
+                \Monolog\Handler\error_log($data['pair'] . $data['pourc']);
                 $message .= sprintf("La monnaie %s a fait %s %. <br/>", $data['pair'], $data['pourc']);
             }
 
@@ -174,7 +177,7 @@ class DatasService {
                 ->setFrom('qdebay.smtp@gmail.com')
                 ->setTo('qdebay@gmail.com')
                 ->setBody($message);
-
+\Monolog\Handler\error_log($message);
             $this->mailer->send($message);
         }
     }

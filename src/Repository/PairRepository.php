@@ -46,9 +46,8 @@ class PairRepository extends ServiceEntityRepository
         $date = new \DateTime();
         $date->sub(new \DateInterval('PT5M'));
 
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $query = $qb->from('App\Entity\Pair', 'p')
-            ->andWhere($qb->expr()->eq('p.mailSent', true))
+        $qb = $this->createQueryBuilder('p');
+        $query = $qb->andWhere($qb->expr()->eq('p.mailSent', true))
             ->andWhere($qb->expr()->lte('p.dateMail', ':datetime'))
             ->setParameter('datetime', $date);
 

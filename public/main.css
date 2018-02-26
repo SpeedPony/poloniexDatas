@@ -3,9 +3,14 @@
 }
 
 #datatable .green {
-    color : green;
+    color : #84F766;
 }
 
 #datatable .red {
-    color : red;
+    color : #FF6939;
+}
+
+body {
+    background-color: #1E2B34;
+    color: #BBBFC2;
 }

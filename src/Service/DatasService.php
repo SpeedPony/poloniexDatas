@@ -158,26 +158,24 @@ class DatasService {
         $i = 0;
         foreach($formatedDatas as $key => $data) {
             $pourcentage = number_format(((($data[1] - $data[10]) / $data[10]) * 100) , 3);
-            if($pourcentage > 3 || $pourcentage < -3) {
+            if($pourcentage > 1 || $pourcentage < -1) {
                 $retour[$i]['pair'] = $key;
                 $retour[$i]['pourc'] = $pourcentage;
             }
         }
-error_log('test');
+
 
         if(count($retour) > 0) {
-            error_log(count($retour));
             $message = "";
             foreach($retour as $data) {
-                error_log($data['pair'] . $data['pourc']);
-                $message .= sprintf("La monnaie %s a fait %s %. <br/>", $data['pair'], $data['pourc']);
+                $message .= sprintf("La monnaie %s a fait %s %%. <br/>", $data['pair'], $data['pourc']);
             }
 
             $message = (new \Swift_Message('Poloniex'))
                 ->setFrom('qdebay.smtp@gmail.com')
                 ->setTo('qdebay@gmail.com')
                 ->setBody($message);
-error_log($message);
+
             $this->mailer->send($message);
         }
     }

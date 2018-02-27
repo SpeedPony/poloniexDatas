@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Constant\TimeConstant;
 
 class FrontController extends Controller
 {
@@ -31,7 +32,7 @@ class FrontController extends Controller
      * @Route("/", name="poloniex_front")
      */
     public function front() {
-        $numbers = array(10,5,3);
+        $numbers = TimeConstant::FONTTIME;
         $datas = $this->get('poloniex.datas_service')->getDatas($numbers);
         $datas = $this->get('poloniex.datas_service')->formatDatas($datas);
         return $this->render('base.html.twig', array('datas' => $datas, 'numbers' => $numbers));

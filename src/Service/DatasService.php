@@ -8,6 +8,7 @@
 
 namespace App\Service;
 
+use App\Constant\TimeConstant;
 use App\Entity\Datas;
 use App\Entity\Pair;
 use App\Repository\DatasRepository;
@@ -163,7 +164,7 @@ class DatasService {
      */
     public function sendMail() {
 
-        $datas = $this->datasRepository->getDatas(array(1,10));
+        $datas = $this->datasRepository->getDatas(array(1, TimeConstant::REFERENCE));
         $formatedDatas = array();
         foreach($datas as $data) {
             $formatedDatas[$data['name']][$data['position']] = $data['value'];
@@ -172,7 +173,7 @@ class DatasService {
         $retour = array();
         $i = 0;
         foreach($formatedDatas as $key => $data) {
-            $pourcentage = number_format(((($data[1] - $data[10]) / $data[10]) * 100) , 3);
+            $pourcentage = number_format(((($data[1] - $data[TimeConstant::REFERENCE]) / $data[TimeConstant::REFERENCE]) * 100) , 3);
             if($pourcentage > 8) {
                 $retour[$i]['pair'] = $key;
                 $retour[$i]['pourc'] = $pourcentage;

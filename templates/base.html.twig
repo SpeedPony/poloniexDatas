@@ -24,7 +24,7 @@
             <tbody>
             {% for data in datas %}
                 <tr>
-                    <td>{{ data.pair }}</td>
+                    <td>{{ data.pair / 2 }}</td>
                     {% for number in numbers %}
                         <td class="{{ data.datas[number].class }}">{{ data.datas[number].pouc }} ({{ data.datas[number].brut  }})</td>
                     {% endfor %}

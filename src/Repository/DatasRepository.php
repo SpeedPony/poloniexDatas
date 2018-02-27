@@ -71,7 +71,7 @@ class DatasRepository extends ServiceEntityRepository
     public function deleteOldDatas() {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $query = $qb->delete('App\Entity\Datas', 'd')
-            ->andWhere($qb->expr()->gte('d.position', 300));
+            ->andWhere($qb->expr()->gte('d.position', 600));
         $query->getQuery()->execute();
     }
 }

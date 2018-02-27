@@ -35,6 +35,10 @@ class FrontController extends Controller
         $numbers = TimeConstant::FONTTIME;
         $datas = $this->get('poloniex.datas_service')->getDatas($numbers);
         $datas = $this->get('poloniex.datas_service')->formatDatas($datas);
-        return $this->render('base.html.twig', array('datas' => $datas, 'numbers' => $numbers));
+        $timeFrame = array();
+        foreach ($numbers as $number) {
+            $timeFrame[] = $number / 2;
+        }
+        return $this->render('base.html.twig', array('datas' => $datas, 'numbers' => $timeFrame));
     }
 }

@@ -176,6 +176,7 @@ class DatasService {
             if($pourcentage > 8) {
                 $retour[$i]['pair'] = $key;
                 $retour[$i]['pourc'] = $pourcentage;
+                $retour[$i]['value'] = $data[1];
                 $i++;
             }
         }
@@ -187,7 +188,7 @@ class DatasService {
                 /** @var Pair $pairEntity */
                 $pairEntity = $this->pairRepository->findOneBy(array('name' => $data['pair']));
                 if(! $pairEntity->isMailSent()) {
-                    $message .= sprintf("La monnaie %s a fait %s %%.", $data['pair'], $data['pourc']);
+                    $message .= sprintf("La monnaie %s a fait %s %% (%s).", $data['pair'], $data['pourc'], $data['value']);
                     $pairEntity->setMailSent(true);
                     $pairEntity->setDateMail(new \DateTime());
                     $this->pairRepository->create($pairEntity);

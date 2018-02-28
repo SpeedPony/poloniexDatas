@@ -1,3 +1,6 @@
 #init:
-#    path: /init
-#    controller: App\Controller\FrontController::init
+#    path: /
+#    controller: App\Controller\FrontController::front
+#
+#    path: /alert
+#    controller: App\Controller\FrontController::alert

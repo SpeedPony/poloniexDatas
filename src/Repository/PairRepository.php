@@ -38,6 +38,17 @@ class PairRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param Pair $pair
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function updateMailSend(Pair $pair) {
+        $pair->setMailSent(true);
+        $pair->setDateMail(new \DateTime());
+        $this->create($pair);
+    }
+
+    /**
      * @return Pair[]
      * @throws \Exception
      */

@@ -11,23 +11,17 @@ namespace App\Controller;
 use App\Service\APIService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Constant\TimeConstant;
 
+/**
+ * Class FrontController
+ * @package App\Controller
+ */
 class FrontController extends Controller
 {
-    /**
-     * @Route("/getDatas", name="poloniex_get_datas")
-     */
-    public function getDatas() {
-        $datas = $this->get('poloniex.api_service')->callPoloniexApi();
-        if(!is_null($datas)) {
-            $this->get('poloniex.datas_service')->saveDatas($datas);
-        }
-        return new JsonResponse(true);
-    }
-
     /**
      * @Route("/", name="poloniex_front")
      */
@@ -35,6 +29,14 @@ class FrontController extends Controller
         $numbers = TimeConstant::FONTTIME;
         $datas = $this->get('poloniex.datas_service')->getDatas($numbers);
         $datas = $this->get('poloniex.datas_service')->formatDatas($datas);
-        return $this->render('base.html.twig', array('datas' => $datas, 'numbers' => $numbers));
+        return $this->render('front.html.twig', array('datas' => $datas, 'numbers' => $numbers));
+    }
+
+    /**
+     * @Route("/alert", name="poloniex_alert")
+     */
+    public function alert(Request $request) {
+        $datas = $this->get('poloniex.alert_service')->getDatas($request);
+        return $this->render('alert.html.twig', array('datas' => $datas));
     }
 }

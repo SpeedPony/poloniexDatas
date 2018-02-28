@@ -1,0 +1,37 @@
+{% extends "base.html.twig" %}
+
+
+{% block body %}
+    {{ parent() }}
+    <table id="datatable" class="display table" width="20%" cellspacing="0">
+        <thead>
+        <tr>
+            <th>Pair</th>
+            <th>Nombre Alert</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for data in datas %}
+            <tr>
+                <td>{{ data.name }}</td>
+                <td>{{ data.count }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#datatable').DataTable({
+                bPaginate: false,
+                bFilter: false,
+                bInfo: false,
+                bSortable: true,
+                aaSorting: [[1,'desc']],
+            });
+        } );
+    </script>
+{% endblock %}

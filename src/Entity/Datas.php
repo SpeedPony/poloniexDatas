@@ -37,7 +37,7 @@ class Datas
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Pair", inversedBy="id")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Pair", inversedBy="datas")
      * @var Pair
      */
     private $pair;

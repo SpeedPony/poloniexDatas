@@ -37,7 +37,22 @@ services:
         arguments:
             - '@poloniex.pair_repository'
             - '@poloniex.datas_repository'
+            - '@poloniex.mail_service'
+
+    poloniex.mail_service:
+        class: App\Service\MailService
+        public: true
+        arguments:
+            - '@poloniex.pair_repository'
+            - '@poloniex.datas_repository'
+            - '@poloniex.alert_repository'
             - '@mailer'
+
+    poloniex.alert_service:
+        class: App\Service\AlertService
+        public: true
+        arguments:
+            - '@poloniex.alert_repository'
 
     poloniex.datas_command:
         class: App\Command\GetDatasCommand
@@ -57,3 +72,9 @@ services:
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments:
             - App\Entity\Datas
+
+    poloniex.alert_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - App\Entity\Alert

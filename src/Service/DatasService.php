@@ -8,6 +8,7 @@
 
 namespace App\Service;
 
+use App\Constant\PairConstant;
 use App\Constant\TimeConstant;
 use App\Entity\Datas;
 use App\Entity\Pair;
@@ -34,25 +35,35 @@ class DatasService {
     private $datasRepository;
 
     /**
-     * @var \Swift_Mailer
+     * @var MailService
      */
-    private $mailer;
+    private $mailService;
 
     /**
      * DatasService constructor.
      * @param PairRepository $pairRepository
      * @param DatasRepository $datasRepository
+     * @param MailService $mailService
      */
-    public function __construct(PairRepository $pairRepository, DatasRepository $datasRepository, \Swift_Mailer $mailer) {
+    public function __construct(PairRepository $pairRepository, DatasRepository $datasRepository, MailService $mailService) {
         $this->pairRepository = $pairRepository;
         $this->datasRepository = $datasRepository;
-        $this->mailer = $mailer;
+        $this->mailService = $mailService;
+    }
+
+    /**
+     * @param $json
+     * @return array
+     */
+    private function decodeJson($json) {
+        return json_decode($json, true);
     }
 
     /**
      * @param $json
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
     public function saveDatas($json) {
         $datas = $this->decodeJson($json);
@@ -72,39 +83,12 @@ class DatasService {
                 $this->datasRepository->create($datasEntity);
             }
         }
+        // Maj des datas
         $this->datasRepository->updatePosition();
-        $this->deleteOldDatas();
-        $this->resetMailSent();
-        $this->sendMail();
-    }
-
-    /**
-     *
-     */
-    public function deleteOldDatas() {
         $this->datasRepository->deleteOldDatas();
-    }
-
-    /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Exception
-     */
-    public function resetMailSent() {
-        $pairs = $this->pairRepository->getPairEmailSentOverdue();
-        foreach ($pairs as $pair) {
-            $pair->setMailSent(false);
-            $pair->setDateMail(null);
-            $this->pairRepository->create($pair);
-        }
-    }
-
-    /**
-     * @param $json
-     * @return array
-     */
-    private function decodeJson($json) {
-        return json_decode($json, true);
+        // Partie mail & alerte
+        $this->mailService->resetMailSent();
+        $this->analyseDatasForMail();
     }
 
     /**
@@ -155,53 +139,35 @@ class DatasService {
                 }
             }
         }
-
         return $datas;
     }
 
     /**
-     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function sendMail() {
-
+    public function analyseDatasForMail() {
         $datas = $this->datasRepository->getDatas(array(1, TimeConstant::REFERENCE));
         $formatedDatas = array();
         foreach($datas as $data) {
             $formatedDatas[$data['name']][$data['position']] = $data['value'];
         }
 
-        $retour = array();
-        $i = 0;
         foreach($formatedDatas as $key => $data) {
             $pourcentage = number_format(((($data[1] - $data[TimeConstant::REFERENCE]) / $data[TimeConstant::REFERENCE]) * 100) , 3);
             if($pourcentage > 8) {
-                $retour[$i]['pair'] = $key;
-                $retour[$i]['pourc'] = $pourcentage;
-                $retour[$i]['value'] = $data[1];
-                $i++;
+                $mailDatas = array();
+                $mailDatas['pair'] = $key;
+                $mailDatas['pourc'] = "+". $pourcentage;
+                $mailDatas['value'] = $data[1];
+                $this->mailService->sendMail($mailDatas, true);
             }
-        }
-
-
-        if(count($retour) > 0) {
-            $message = "";
-            foreach($retour as $data) {
-                /** @var Pair $pairEntity */
-                $pairEntity = $this->pairRepository->findOneBy(array('name' => $data['pair']));
-                if(! $pairEntity->isMailSent()) {
-                    $message .= sprintf("La monnaie %s a fait %s %% (%s).", $data['pair'], $data['pourc'], $data['value']);
-                    $pairEntity->setMailSent(true);
-                    $pairEntity->setDateMail(new \DateTime());
-                    $this->pairRepository->create($pairEntity);
-                }
-            }
-
-            if(strlen($message) > 0) {
-                $message = (new \Swift_Message('Poloniex'))
-                    ->setFrom('qdebay.smtp@gmail.com')
-                    ->setTo('qdebay@gmail.com')
-                    ->setBody($message);
-                $this->mailer->send($message);
+            else if(in_array($key, PairConstant::MARGIN) && $pourcentage < 6) {
+                $mailDatas = array();
+                $mailDatas['pair'] = $key;
+                $mailDatas['pourc'] = "-". $pourcentage;
+                $mailDatas['value'] = $data[1];
+                $this->mailService->sendMail($mailDatas, false);
             }
         }
     }

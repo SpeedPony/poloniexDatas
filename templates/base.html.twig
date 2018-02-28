@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        {% block additionnalMetas %}{% endblock %}
         <meta http-equiv="refresh" content="60" >
         <title>{% block title %}Make it rain{% endblock %}</title>
         {% block stylesheets %}
@@ -11,48 +12,11 @@
     </head>
     <body>
         {% block body %}
-        <table id="datatable" class="display table" width="100%" cellspacing="0">
-            <thead>
-            <tr>
-                <th>Pair</th>
-                {% for number in numbers %}
-                    <th>Diff {{ number / 2 }} min</th>
-                {% endfor %}
-                <th>Prix</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for data in datas %}
-                <tr>
-                    <td>{{ data.pair }}</td>
-                    {% for number in numbers %}
-                        <td class="{{ data.datas[number].class }}">{{ data.datas[number].pouc }} ({{ data.datas[number].brut  }})</td>
-                    {% endfor %}
-                    <td>{{ data.datas[1].brut }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
 
         {% endblock %}
         {% block javascripts %}
             <script src="//code.jquery.com/jquery-1.12.4.js" type="text/javascript"></script>
             <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js" charset="utf8" type="text/javascript"></script>
-            <script src="//cdn.datatables.net/plug-ins/1.10.16/sorting/any-number.js" charset="utf8" type="text/javascript"></script>
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    $('#datatable').DataTable({
-                        bPaginate: false,
-                        bFilter: false,
-                        bInfo: false,
-                        bSortable: true,
-                        aaSorting: [[1,'desc']],
-                        columnDefs: [
-                            { type: 'any-number', targets: [1,2,3] }
-                        ]
-                    });
-                } );
-            </script>
         {% endblock %}
     </body>
 </html>

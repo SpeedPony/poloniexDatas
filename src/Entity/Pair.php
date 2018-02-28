@@ -37,10 +37,22 @@ class Pair
     private $mailSent;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable = true)
      * @var \DateTime
      */
-    private $dateMail;
+    private $dateMail = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Datas", mappedBy="pair")
+     * @var Datas
+     */
+    private $datas;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Alert", mappedBy="pair")
+     * @var Alert
+     */
+    private $alert;
 
     /**
      * @return int

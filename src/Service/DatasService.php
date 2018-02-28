@@ -162,7 +162,7 @@ class DatasService {
                 $mailDatas['value'] = $data[1];
                 $this->mailService->sendMail($mailDatas, true);
             }
-            else if(in_array($key, PairConstant::MARGIN) && $pourcentage < 6) {
+            else if(in_array($key, PairConstant::MARGIN) && $pourcentage < -6) {
                 $mailDatas = array();
                 $mailDatas['pair'] = $key;
                 $mailDatas['pourc'] = "-". $pourcentage;

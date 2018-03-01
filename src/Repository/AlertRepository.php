@@ -45,6 +45,7 @@ class AlertRepository extends ServiceEntityRepository
         $alert = new Alert();
         $alert->setPair($pair);
         $alert->setDate(new \DateTime());
+        $this->create($alert);
     }
 
     /**

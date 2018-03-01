@@ -37,6 +37,6 @@ class AlertService {
         if(is_null($request->get('maxDate'))) {
             $maxDate = new \DateTime('2022-01-01');
         }
-        $this->alertRepository->getDatas($minDate, $maxDate);
+        return $this->alertRepository->getDatas($minDate, $maxDate);
     }
 }

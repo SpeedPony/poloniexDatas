@@ -59,6 +59,7 @@ class AlertRepository extends ServiceEntityRepository
             ->addSelect('p.name as name')
             ->leftJoin('a.pair', 'p')
             ->andWhere($qb->expr()->between('a.date', ':minDate', ':maxDate'))
+            ->addGroupBy('p.name')
             ->setParameter('minDate', $minDate)
             ->setParameter('maxDate', $maxDate);
 

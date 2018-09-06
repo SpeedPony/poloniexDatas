@@ -73,6 +73,7 @@ class DatasService {
                 if (is_null($pairEntity)) {
                     $pairEntity = new Pair();
                     $pairEntity->setName($pair);
+                    $pairEntity->setMailSent(false);
                     $this->pairRepository->create($pairEntity);
                 }
                 $datasEntity = new Datas();

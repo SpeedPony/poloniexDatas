@@ -24,6 +24,11 @@ class PairConstant {
         'BTC_MAID',
         'BTC_FCT',
         'BTC_BTS',
-        'BTC_CLAM'
+        'BTC_CLAM',
+        'BTC_ATOM',
+        'BTC_BCHABC',
+        'BTC_BCHSV',
+        'BTC_EOS',
+        'BTC_ETC',
     ];
 }

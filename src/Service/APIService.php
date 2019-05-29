@@ -21,9 +21,10 @@ class APIService {
      */
     public function callPoloniexApi() {
         $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET', 'https://poloniex.com/public?command=returnTicker');
+        $response = $client->request('GET', 'https://poloniex.com/public?command=return24hVolume');
+
         if($response->getStatusCode() == 200) {
-            return $response->getBody();
+            return $response->getBody()->getContents();
         }
     }
 }

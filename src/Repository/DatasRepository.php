@@ -9,6 +9,7 @@
 namespace App\Repository;
 
 use App\Entity\Datas;
+use App\Entity\Pair;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -39,39 +40,42 @@ class DatasRepository extends ServiceEntityRepository
     }
 
     /**
-     *
+     * @param Pair $pair
+     * @param $value
+     * @return mixed
+     * @throws \Exception
      */
-    public function updatePosition() {
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $query = $qb->update('App\Entity\Datas', 'd')
-            ->set('d.position', 'd.position + 1')
-            ->getQuery();
-        $query->execute();
-    }
+    public function getDatas(Pair $pair, $value) {
+        $value = $value * 0.66;
+        $now = new \DateTime();
+        $yesterday = (clone $now)->sub(new \DateInterval('P1D'));
+        $subqb = $this->createQueryBuilder('d1');
+        $subqb->select("avg(d1.value)")
+            ->leftJoin('d1.pair', 'p1')
+            ->andWhere($subqb->expr()->eq('p1.id', ':pairId'))
+            ->andWhere($subqb->expr()->between('d1.date', ':yesterday', ':now'));
 
-    /**
-     * @param array $position
-     * @return array
-     */
-    public function getDatas($position) {
         $qb = $this->createQueryBuilder('d');
-        $query = $qb->select('d.value as value')
-            ->addSelect('d.position as position')
-            ->addSelect('p.name as name')
-            ->leftJoin('d.pair', 'p')
-            ->andWhere($qb->expr()->in('d.position', ':position'))
-            ->setParameter('position', $position);
+        $qb->leftJoin('d.pair', 'p')
+            ->andWhere($subqb->expr()->eq('p.id', ':pairId'))
+            ->andWhere($qb->expr()->gte( $value, '(' . $subqb->getDQL() . ')'))
+            ->setParameter('pairId', $pair->getId())
+            ->setParameter('now', $now)
+            ->setParameter('yesterday', $yesterday);
 
-        return $query->getQuery()->getResult();
+        return $qb->getQuery()->getResult();
     }
 
     /**
      *
      */
     public function deleteOldDatas() {
+        $now = new \DateTime();
+        $now->sub( new \DateInterval('P5D') );
         $qb = $this->getEntityManager()->createQueryBuilder();
         $query = $qb->delete('App\Entity\Datas', 'd')
-            ->andWhere($qb->expr()->gte('d.position', 600));
+            ->andWhere($qb->expr()->lte('d.date', ':date'))
+            ->setParameter('date', $now);
         $query->getQuery()->execute();
     }
 }

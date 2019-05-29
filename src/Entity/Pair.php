@@ -30,6 +30,7 @@ class Pair
      */
     private $name;
 
+
     /**
      * @ORM\Column(type="boolean")
      * @var boolean
@@ -47,12 +48,6 @@ class Pair
      * @var Datas
      */
     private $datas;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Alert", mappedBy="pair")
-     * @var Alert
-     */
-    private $alert;
 
     /**
      * @return int

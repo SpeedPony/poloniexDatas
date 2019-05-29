@@ -55,7 +55,7 @@ class PairRepository extends ServiceEntityRepository
     public function getPairEmailSentOverdue() {
 
         $date = new \DateTime();
-        $date->sub(new \DateInterval('PT5M'));
+        $date->sub(new \DateInterval('PT720M'));
 
         $qb = $this->createQueryBuilder('p');
         $query = $qb->andWhere($qb->expr()->eq('p.mailSent', true))

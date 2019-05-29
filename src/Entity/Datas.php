@@ -43,12 +43,6 @@ class Datas
     private $pair;
 
     /**
-     * @ORM\Column(type="integer")
-     * @var integer
-     */
-    private $position;
-
-    /**
      * @return int
      */
     public function getId(): int {
@@ -102,19 +96,5 @@ class Datas
      */
     public function setPair(Pair $pair): void {
         $this->pair = $pair;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPosition(): int {
-        return $this->position;
-    }
-
-    /**
-     * @param int $position
-     */
-    public function setPosition(int $position): void {
-        $this->position = $position;
     }
 }

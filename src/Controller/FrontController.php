@@ -31,12 +31,4 @@ class FrontController extends Controller
         $datas = $this->get('poloniex.datas_service')->formatDatas($datas);
         return $this->render('front.html.twig', array('datas' => $datas, 'numbers' => $numbers));
     }
-
-    /**
-     * @Route("/alert", name="poloniex_alert")
-     */
-    public function alert(Request $request) {
-        $datas = $this->get('poloniex.alert_service')->getDatas($request);
-        return $this->render('alert.html.twig', array('datas' => $datas));
-    }
 }
